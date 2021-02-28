@@ -21,11 +21,11 @@ class CertificateView(views.APIView):
 			return response.Response(str(e))
 
 	def post(self, request, *args, **kwargs): 
-		# try:
+		try:
 			user=self.request.user	
 			request.data["user"]=user.id
 			pdf=request.FILES['pdf']
-			pdf_name=user.name+request.data.get("certid")+'.pdf'
+			pdf_name=user.email+request.data.get("certid")+'.pdf'
 			a=Upload.upload_pdf(pdf, pdf_name)
 			request.data["pdf_url"]='https://storage.googleapis.com/certificate_pdf/pdf/'+pdf_name
 			serializer = CertificateSerializer(data=request.data)
@@ -36,9 +36,11 @@ class CertificateView(views.APIView):
 				email_from = settings.EMAIL_HOST_USER 
 				recipient_list = [user.email] 
 				send_mail( subject, message, email_from, recipient_list ) 
-			return response.Response(serializer.data,status=status.HTTP_200_OK)
-		# except Exception as e:
-			# return response.Response(str(e))
+				return response.Response(serializer.data,status=status.HTTP_200_OK)
+			else:
+				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return response.Response(str(e))
 
 class AllUsersView(views.APIView):
 	permission_classes = [permissions.IsAdminUser,]
