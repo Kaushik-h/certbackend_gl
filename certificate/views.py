@@ -21,7 +21,7 @@ class CertificateView(views.APIView):
 			return response.Response(str(e))
 
 	def post(self, request, *args, **kwargs): 
-		try:
+		# try:
 			user=self.request.user	
 			request.data["user"]=user.id
 			pdf=request.FILES['pdf']
@@ -37,8 +37,8 @@ class CertificateView(views.APIView):
 				recipient_list = [user.email] 
 				send_mail( subject, message, email_from, recipient_list ) 
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
-		except Exception as e:
-			return response.Response(str(e))
+		# except Exception as e:
+			# return response.Response(str(e))
 
 class AllUsersView(views.APIView):
 	permission_classes = [permissions.IsAdminUser,]
