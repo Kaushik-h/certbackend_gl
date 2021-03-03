@@ -74,7 +74,7 @@ class AdminSendMailView(views.APIView):
 			subject = 'Crefidy admin' 
 			message = request.data.get('msg')
 			email_from = settings.EMAIL_HOST_USER 
-			recipient_list = [request.data.get("empid")] 
+			recipient_list = [user.email] 
 			send_mail( subject, message, email_from, recipient_list ) 
 			return response.Response("Mail sent",status=status.HTTP_200_OK)
 		except Exception as e:
