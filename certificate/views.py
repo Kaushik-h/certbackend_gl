@@ -58,8 +58,11 @@ class AllUsersCertificateView(views.APIView):
 	http_method_names=['post']
 	def post(self, request, *args, **kwargs): 
 		try:
-			user = User.objects.get(empid=request.data.get("empid"))
-			queryset=Certificates.objects.filter(user=user)
+			filters = {
+ 				key: value
+    			for key, value in request.data.items()
+			}
+			queryset=Certificates.objects.filter(**filters)
 			serializer=CertificateSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
