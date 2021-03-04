@@ -7,4 +7,6 @@ urlpatterns = [
     path('alluserscertificates', AllUsersCertificateView.as_view()),
     path('sendmail', AdminSendMailView.as_view()),
     path('adminhome', AdminHome.as_view()),
+    path('expiring', ExpiringCertificateView.as_view()),
+    path('expired', ExpiredCertificateView.as_view()),
 ]

@@ -6,6 +6,7 @@ from .serializers import *
 from accounts.serializers import UserSerializer
 from django.conf import settings 
 from django.core.mail import send_mail
+from datetime import date,timedelta
 
 class CertificateView(views.APIView):
 	permission_classes = [permissions.IsAuthenticated,]
@@ -63,6 +64,30 @@ class AllUsersCertificateView(views.APIView):
     			for key, value in request.data.items()
 			}
 			queryset=Certificates.objects.filter(**filters)
+			serializer=CertificateSerializer(queryset,many=True)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+class ExpiringCertificateView(views.APIView):
+	permission_classes = [permissions.IsAdminUser,]
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs): 
+		try:
+			days=request.data.get("days")
+			exp_date=date.today()+timedelta(days=days)
+			queryset=Certificates.objects.filter(expiry_date__lte=exp_date).filter(expiry_date__gte=date.today())
+			serializer=CertificateSerializer(queryset,many=True)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+class ExpiredCertificateView(views.APIView):
+	permission_classes = [permissions.IsAdminUser,]
+	http_method_names=['get']
+	def get(self, request, *args, **kwargs): 
+		try:
+			queryset=Certificates.objects.filter(expiry_date__lte=date.today())
 			serializer=CertificateSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
