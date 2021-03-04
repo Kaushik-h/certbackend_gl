@@ -9,6 +9,7 @@ class Certificates(models.Model):
 	level=models.CharField(max_length=20)
 	certname=models.CharField(max_length=50)
 	certid=models.CharField(max_length=20,unique=True)
+	sbu=models.CharField(max_length=40)
 	certified_date=models.DateField(null=False)
 	expiry_date=models.DateField(null=False)
 	pdf_url=models.URLField(null=False,blank=False)
