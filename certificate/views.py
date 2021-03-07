@@ -64,7 +64,7 @@ class AllUsersCertificateView(views.APIView):
     			for key, value in request.data.items()
 			}
 			queryset=Certificates.objects.filter(**filters)
-			serializer=CertificateSerializer(queryset,many=True)
+			serializer=GetCertificateSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
@@ -77,7 +77,7 @@ class ExpiringCertificateView(views.APIView):
 			days=request.data.get("days")
 			exp_date=date.today()+timedelta(days=days)
 			queryset=Certificates.objects.filter(expiry_date__lte=exp_date).filter(expiry_date__gte=date.today())
-			serializer=CertificateSerializer(queryset,many=True)
+			serializer=GetCertificateSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
@@ -88,25 +88,39 @@ class ExpiredCertificateView(views.APIView):
 	def get(self, request, *args, **kwargs): 
 		try:
 			queryset=Certificates.objects.filter(expiry_date__lte=date.today())
-			serializer=CertificateSerializer(queryset,many=True)
+			serializer=GetCertificateSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
 
 class AdminSendMailView(views.APIView):
 	permission_classes = [permissions.IsAdminUser,]
-	http_method_names=['post']
+	http_method_names=['post','delete']
 	def post(self, request, *args, **kwargs): 
 		try:
-			user = User.objects.get(empid=request.data.get("empid"))
-			# subject = 'Crefidy admin' 
-			# message = request.data.get('msg')
-			# email_from = settings.EMAIL_HOST_USER 
-			# recipient_list = [user.email] 
-			# send_mail( subject, message, email_from, recipient_list ) 
+			certs = Certificates.objects.filter(id__in=request.data.get("certids")).select_related('user')
+			for cert in certs:
+				exp = cert.expiry_date-date.today()
+				subject = 'Crefidy admin' 
+				message = 'Hello '+cert.user.name+' , Your '+cert.csp+' '+cert.certname+' certification is expiring '+str(exp.days)+' days'
+				email_from = settings.EMAIL_HOST_USER 
+				recipient_list = [cert.user.email] 
+				print(cert,message,recipient_list)
+				# send_mail( subject, message, email_from, recipient_list ) 
 			return response.Response("Mail sent",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
+
+	def delete(self, request, *args, **kwargs):
+		try:
+			if request.data.get('certid') is not None:
+				Certificates.objects.get(id=request.data.get('certid')).delete()
+			if request.data.get('userid') is not None:
+				User.objects.get(id=request.data.get('userid')).delete()
+			return response.Response("Deleted",status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+		
 
 class AdminHome(views.APIView):
 	permission_classes = [permissions.IsAdminUser]

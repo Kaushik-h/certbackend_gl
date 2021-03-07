@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 from google.oauth2 import service_account
+from datetime import date,timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -56,6 +57,10 @@ REST_FRAMEWORK = {
     ),
     'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
+
+REST_KNOX = {
+  'TOKEN_TTL': timedelta(days=30),
+  }
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
