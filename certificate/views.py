@@ -45,10 +45,10 @@ class CertificateView(views.APIView):
 
 class AllUsersView(views.APIView):
 	permission_classes = [permissions.IsAdminUser,]
-	http_method_names=['get']
-	def get(self, request, *args, **kwargs): 
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs): 
 		try:
-			queryset=User.objects.filter(user_type='nuser')
+			queryset=User.objects.filter(user_type='nuser').filter(id__in=request.data.get('userids'))
 			serializer=UserSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
