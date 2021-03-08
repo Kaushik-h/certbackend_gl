@@ -13,7 +13,7 @@ class AddQuestionView(views.APIView):
 	def post(self, request, *args, **kwargs): 
 		try:
 			quiz=Quiz.objects.get(id=request.data.get("quizid"))
-			for i in range(1,(quiz.total_questions-1)):
+			for i in range(1,(quiz.total_questions+1)):
 				if request.data.get(str(i))==None:
 					continue
 				choices=request.data.get(str(i)).pop('choices')
