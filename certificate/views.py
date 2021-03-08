@@ -121,7 +121,6 @@ class AdminSendMailView(views.APIView):
 		except Exception as e:
 			return response.Response(str(e))
 		
-
 class AdminHome(views.APIView):
 	permission_classes = [permissions.IsAdminUser]
 	http_method_names=['post']
@@ -131,11 +130,11 @@ class AdminHome(views.APIView):
 			data={}
 
 			if sbu==None:
-				data["users_count"]=User.objects.filter(user_type='nuser').count()
+				data["users_count"]=list(User.objects.filter(user_type='nuser').values_list('id',flat=True))
 				certs=Certificates.objects.all()
 				data["certificates_count"]=certs.count()
 			else:
-				data["users_count"]=set(Certificates.objects.filter(sbu='SBU 1').values_list('user',flat=True))
+				data["users_count"]=set(Certificates.objects.filter(sbu=sbu).values_list('user',flat=True))
 				certs=Certificates.objects.filter(sbu=sbu)
 				data["certificates_count"]=certs.count()
 
