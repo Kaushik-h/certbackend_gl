@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from datetime import datetime
 User=get_user_model()
 
 class Quiz(models.Model):
@@ -40,8 +41,12 @@ class Choice(models.Model):
 class QuizTaker(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
 	quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
+	rightans_no = models.IntegerField()
+	wrongans_no = models.IntegerField()
 	score = models.IntegerField(default=0)
-	date_finished = models.DateTimeField(null=True)
+	report_url = models.URLField()
+	date = models.DateTimeField(default=datetime.now())
+	max_score = models.BooleanField()
 
 	def __str__(self):
 		return self.user.email
