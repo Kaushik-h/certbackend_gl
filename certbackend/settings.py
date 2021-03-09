@@ -30,7 +30,7 @@ SECRET_KEY = 'y_kq_ytulo3nm+-3*%h0@hy2e49c*p$pm*nyg^x0o@8t&6trbl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['credify.tk','www.credify.tk','34.107.221.144','127.0.0.1','35.244.227.149',]
+ALLOWED_HOSTS = ['www.credify.tk','credify.tk','34.107.221.144','127.0.0.1','35.244.227.149',]
 
 AUTH_USER_MODEL = 'accounts.User'
 
