@@ -30,7 +30,7 @@ SECRET_KEY = 'y_kq_ytulo3nm+-3*%h0@hy2e49c*p$pm*nyg^x0o@8t&6trbl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['credifybe.tk','www.credifybe.tk','34.121.134.191','127.0.0.1','35.244.227.149',]
+ALLOWED_HOSTS = ['credify.tk','www.credify.tk','34.107.221.144','127.0.0.1','35.244.227.149',]
 
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -80,7 +80,7 @@ ROOT_URLCONF = 'certbackend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/ 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,6 +144,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+     os.path.join(BASE_DIR, 'build/static'),
+     os.path.join(BASE_DIR, 'build')
+)
+
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.path.join(BASE_DIR, 'arulmozhi-project-b7c5242a1b10.json')
