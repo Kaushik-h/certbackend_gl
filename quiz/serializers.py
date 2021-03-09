@@ -28,6 +28,11 @@ class QuizTakerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model=QuizTaker
 		fields='__all__'
+
+class GetQuizTakerSerializer(serializers.ModelSerializer):
+	class Meta:
+		model=QuizTaker
+		fields='__all__'
 		depth=1
 
 class RankingsUserSerializer(serializers.ModelSerializer):

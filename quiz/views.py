@@ -70,7 +70,7 @@ class QuizTakerView(views.APIView):
     		# 	for key, value in request.data.items()
 			# }
 			queryset=QuizTaker.objects.filter(user=user)
-			serializer=QuizTakerSerializer(queryset,many=True)
+			serializer=GetQuizTakerSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
