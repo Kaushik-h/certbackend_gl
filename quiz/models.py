@@ -50,3 +50,9 @@ class QuizTaker(models.Model):
 
 	def __str__(self):
 		return self.user.email
+
+class Feedback(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
+	msg = models.TextField()
+	rating = models.CharField(max_length=20)

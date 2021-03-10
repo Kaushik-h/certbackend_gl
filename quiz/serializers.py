@@ -30,10 +30,23 @@ class QuizTakerSerializer(serializers.ModelSerializer):
 		fields='__all__'
 
 class GetQuizTakerSerializer(serializers.ModelSerializer):
+	user=UserSerializer()
+	quiz=QuizSerializer()
 	class Meta:
 		model=QuizTaker
 		fields='__all__'
-		depth=1
+
+class GetFeedbackSerializer(serializers.ModelSerializer):
+	user=UserSerializer()
+	quiz=QuizSerializer()
+	class Meta:
+		model=Feedback
+		fields='__all__'
+
+class FeedbackSerializer(serializers.ModelSerializer):
+	class Meta:
+		model=Feedback
+		fields='__all__'
 
 class RankingsUserSerializer(serializers.ModelSerializer):
 	total=serializers.IntegerField()

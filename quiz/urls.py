@@ -8,4 +8,6 @@ urlpatterns = [
     path('getquestions', GetQuestionView.as_view()),
     path('quizresults', QuizTakerView.as_view()),
     path('rankings', Rankings.as_view()),
+    path('feedback', FeedbackView.as_view()),
+    path('sendfeedback', SendFeedback.as_view()),
 ]

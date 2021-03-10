@@ -108,3 +108,34 @@ class Rankings(views.APIView):
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
+
+class FeedbackView(views.APIView):
+	http_method_names=['get','delete']
+	def get(self, request, *args, **kwargs): 
+		try:
+			queryset=Feedback.objects.all()
+			serializer=GetFeedbackSerializer(queryset,many=True)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+	def delete(self, request, *args, **kwargs):
+		try:
+			Feedback.objects.get(id=request.data.get('feedbackid')).delete()
+			return response.Response("Deleted",status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+		
+class SendFeedback(views.APIView):
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs):
+		try:
+			request.data["user"]=request.user.id
+			serializer=FeedbackSerializer(data=request.data)
+			if serializer.is_valid():
+				serializer.save()
+			else:
+				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
