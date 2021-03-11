@@ -96,7 +96,7 @@ class QuizTakerView(views.APIView):
 			quiz_date=str(datetime.now()).replace(" ","")
 			pdf_name=user.email+quiz_date+'.pdf'
 			a=Upload.upload_pdf(pdf, pdf_name)
-			request.data["pdf_url"]='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
+			request.data["report_url"]='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			serializer=QuizTakerSerializer(data=request.data)
 			if serializer.is_valid():
 				serializer.save()
