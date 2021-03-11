@@ -29,6 +29,12 @@ class AddQuestionView(views.APIView):
 						cserializer=ChoiceSerializer(data=c)
 						if cserializer.is_valid():
 							choice=cserializer.save()
+						else:
+							print(cserializer.errors)
+							print(cserializer.data)
+					else:
+						print(serializer.errors)
+						print(serializer.data)
 			return response.Response("Created successfully",status=status.HTTP_201_CREATED)
 		# except Exception as e:
 		# 	return response.Response(str(e))
