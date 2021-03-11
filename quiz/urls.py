@@ -10,4 +10,5 @@ urlpatterns = [
     path('rankings', Rankings.as_view()),
     path('feedback', FeedbackView.as_view()),
     path('sendfeedback', SendFeedback.as_view()),
+    path('adminquizstats', AdminQuizStats.as_view()),
 ]

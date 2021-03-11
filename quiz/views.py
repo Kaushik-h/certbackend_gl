@@ -14,7 +14,7 @@ class AddQuestionView(views.APIView):
 	# permission_classes = [permissions.IsAdminUser,]
 	http_method_names=['post']
 	def post(self, request, *args, **kwargs): 
-		# try:
+		try:
 			quiz=Quiz.objects.get(id=request.data.get("quizid"))
 			for i in range(1,(quiz.total_questions+1)):
 				if request.data.get(str(i))==None:
@@ -29,15 +29,9 @@ class AddQuestionView(views.APIView):
 						cserializer=ChoiceSerializer(data=c)
 						if cserializer.is_valid():
 							choice=cserializer.save()
-						else:
-							print(cserializer.errors)
-							print(cserializer.data)
-					else:
-						print(serializer.errors)
-						print(serializer.data)
 			return response.Response("Created successfully",status=status.HTTP_201_CREATED)
-		# except Exception as e:
-		# 	return response.Response(str(e))
+		except Exception as e:
+			return response.Response(str(e))
 
 class GetQuizView(views.APIView):
 	# permission_classes = [permissions.IsAdminUser,]
@@ -149,6 +143,21 @@ class SendFeedback(views.APIView):
 				serializer.save()
 			else:
 				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+class AdminQuizStats(views.APIView):
+	# permission_classes = [permissions.IsAdminUser,]
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs): 
+		try:
+			filters = {
+ 				key: value
+    			for key, value in request.data.items()
+			}
+			queryset=QuizTaker.objects.filter(**filters)
+			serializer=GetQuizTakerSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
