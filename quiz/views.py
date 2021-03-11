@@ -14,7 +14,7 @@ class AddQuestionView(views.APIView):
 	# permission_classes = [permissions.IsAdminUser,]
 	http_method_names=['post']
 	def post(self, request, *args, **kwargs): 
-		try:
+		# try:
 			quiz=Quiz.objects.get(id=request.data.get("quizid"))
 			for i in range(1,(quiz.total_questions+1)):
 				if request.data.get(str(i))==None:
@@ -30,8 +30,8 @@ class AddQuestionView(views.APIView):
 						if cserializer.is_valid():
 							choice=cserializer.save()
 			return response.Response("Created successfully",status=status.HTTP_201_CREATED)
-		except Exception as e:
-			return response.Response(str(e))
+		# except Exception as e:
+		# 	return response.Response(str(e))
 
 class GetQuizView(views.APIView):
 	# permission_classes = [permissions.IsAdminUser,]
