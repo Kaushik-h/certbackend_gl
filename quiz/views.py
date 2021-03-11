@@ -2,6 +2,8 @@ from rest_framework import generics, views, permissions ,response, status
 from .serializers import *
 from .models import *
 from django.db.models import Sum
+from datetime import datetime
+from .upload_report import Upload
 
 class AddQuizView(generics.CreateAPIView):
 	# permission_classes = [permissions.IsAdminUser,]
@@ -90,6 +92,11 @@ class QuizTakerView(views.APIView):
 					request.data["max_score"]=False
 			else:
 				request.data["max_score"]=True
+			pdf=request.FILES['report']
+			quiz_date=str(datetime.now()).replace(" ","")
+			pdf_name=user.email+quiz_date+'.pdf'
+			a=Upload.upload_pdf(pdf, pdf_name)
+			request.data["pdf_url"]='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			serializer=QuizTakerSerializer(data=request.data)
 			if serializer.is_valid():
 				serializer.save()

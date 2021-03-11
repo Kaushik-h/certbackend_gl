@@ -30,11 +30,17 @@ class QuizTakerSerializer(serializers.ModelSerializer):
 		fields='__all__'
 
 class GetQuizTakerSerializer(serializers.ModelSerializer):
+	total_questions=serializers.SerializerMethodField()
+	total_marks=serializers.SerializerMethodField()
 	user=UserSerializer()
 	quiz=QuizSerializer()
 	class Meta:
 		model=QuizTaker
 		fields='__all__'
+	def get_total_questions(self, obj):
+		return obj.quiz.question_count
+	def get_total_marks(self, obj):
+		return (obj.quiz.question_count*obj.quiz.marks)
 
 class GetFeedbackSerializer(serializers.ModelSerializer):
 	user=UserSerializer()
