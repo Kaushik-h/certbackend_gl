@@ -32,7 +32,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
 	question = models.ForeignKey(Question, related_name='choices' ,on_delete=models.CASCADE)
-	text = models.CharField(max_length=100)
+	text = models.TextField()
 	is_correct = models.BooleanField(default=False)
 
 	def __str__(self):
