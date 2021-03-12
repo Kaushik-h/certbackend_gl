@@ -4,11 +4,22 @@ from .models import *
 from django.db.models import Sum
 from datetime import datetime
 from .upload_report import Upload
+from django.conf import settings 
+from django.core.mail import send_mail
 
 class AddQuizView(generics.CreateAPIView):
 	# permission_classes = [permissions.IsAdminUser,]
 	serializer_class=QuizSerializer
 	queryset=Quiz.objects.all()
+
+class DeleteQuizView(views.APIView):
+	http_method_names=['delete']
+	def delete(self, request, *args, **kwargs):
+		try:
+			Quiz.objects.get(id=request.data.get('quizid')).delete()
+			return response.Response("Deleted",status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
 
 class AddQuestionView(views.APIView):
 	# permission_classes = [permissions.IsAdminUser,]
@@ -99,7 +110,12 @@ class QuizTakerView(views.APIView):
 			request.data["report_url"]='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			serializer=QuizTakerSerializer(data=request.data)
 			if serializer.is_valid():
-				serializer.save()
+				result=serializer.save()
+				# subject = 'Quiz result' 
+				# message = 'Hello '+user.name+' , Your test results are in. You have scored '+result.score+' out of '+(result.quiz.question_count*result.quiz.marks)+' You can access your report through this link here' +result.report_url
+				# email_from = settings.EMAIL_HOST_USER 
+				# recipient_list = [user.email] 
+				# send_mail( subject, message, email_from, recipient_list ) 
 			else:
 				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
