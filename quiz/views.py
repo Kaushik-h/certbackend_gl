@@ -5,7 +5,7 @@ from django.db.models import Sum
 from datetime import datetime
 from .upload_report import Upload
 from django.conf import settings 
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage	
 
 class AddQuizView(generics.CreateAPIView):
 	# permission_classes = [permissions.IsAdminUser,]
@@ -103,22 +103,34 @@ class QuizTakerView(views.APIView):
 					request.data["max_score"]=False
 			else:
 				request.data["max_score"]=True
+			serializer=QuizTakerSerializer(data=request.data)
+			if serializer.is_valid():
+				result=serializer.save()
+			else:
+				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+class QuizTakerpdf(views.APIView):
+	permission_classes = [permissions.IsAuthenticated,]
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs): 
+		try:
+			user=request.user
+			quiztaker=QuizTaker.objects.get(id=request.data.get("quiztakerid"))
 			pdf=request.FILES['report']
 			quiz_date=str(datetime.now()).replace(" ","")
 			pdf_name=user.email+quiz_date+'.pdf'
 			a=Upload.upload_pdf(pdf, pdf_name)
-			request.data["report_url"]='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
-			serializer=QuizTakerSerializer(data=request.data)
-			if serializer.is_valid():
-				result=serializer.save()
-				# subject = 'Quiz result' 
-				# message = 'Hello '+user.name+' , Your test results are in. You have scored '+result.score+' out of '+(result.quiz.question_count*result.quiz.marks)+' You can access your report through this link here' +result.report_url
-				# email_from = settings.EMAIL_HOST_USER 
-				# recipient_list = [user.email] 
-				# send_mail( subject, message, email_from, recipient_list ) 
-			else:
-				return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-			return response.Response(serializer.data,status=status.HTTP_200_OK)
+			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
+			quiztaker.save(force_update=True)
+			# subject = 'Quiz result' 
+			# message = 'Hello '+user.name+' , Your test results are in. You have scored '+result.score+' out of '+(result.quiz.question_count*result.quiz.marks)+' You can access your report through this link here' +result.report_url
+			# email_from = settings.EMAIL_HOST_USER 
+			# recipient_list = [user.email] 
+			# send_mail( subject, message, email_from, recipient_list ) 
+			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
 
@@ -175,5 +187,23 @@ class AdminQuizStats(views.APIView):
 			queryset=QuizTaker.objects.filter(**filters)
 			serializer=GetQuizTakerSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
+		except Exception as e:
+			return response.Response(str(e))
+
+class AdminQuizStatspdf(views.APIView):
+	# permission_classes = [permissions.IsAdminUser,]
+	http_method_names=['post']
+	def post(self, request, *args, **kwargs): 
+		try:
+			user=User.objects.get(id=request.data.get("userid"))
+			pdf=request.FILES['stats']
+			# subject = 'Quiz stats' 
+			# message = 'Hello '+user.name+' .You can find the summary of your performance in this attachment'
+			# email_from = settings.EMAIL_HOST_USER 
+			# recipient_list = [user.email] 
+			# mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+            # mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
+            # mail.send()
+			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))

@@ -27,8 +27,8 @@ class QuizSerializer(serializers.ModelSerializer):
 class QuizTakerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model=QuizTaker
-		fields='__all__'
-
+		exclude=['report_url']
+		
 class GetQuizTakerSerializer(serializers.ModelSerializer):
 	total_questions=serializers.SerializerMethodField()
 	total_marks=serializers.SerializerMethodField()

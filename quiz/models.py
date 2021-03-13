@@ -44,7 +44,7 @@ class QuizTaker(models.Model):
 	rightans_no = models.IntegerField()
 	wrongans_no = models.IntegerField()
 	score = models.IntegerField(default=0)
-	report_url = models.URLField()
+	report_url = models.URLField(null=True,blank=True)
 	date = models.DateTimeField(auto_now_add=True)
 	max_score = models.BooleanField()
 
