@@ -106,7 +106,7 @@ class AdminSendMailView(views.APIView):
 				email_from = settings.EMAIL_HOST_USER 
 				recipient_list = [cert.user.email] 
 				print(cert,message,recipient_list)
-				# send_mail( subject, message, email_from, recipient_list ) 
+				send_mail( subject, message, email_from, recipient_list ) 
 			return response.Response("Mail sent",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))

@@ -125,11 +125,11 @@ class QuizTakerpdf(views.APIView):
 			a=Upload.upload_pdf(pdf, pdf_name)
 			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			quiztaker.save(force_update=True)
-			# subject = 'Quiz result' 
-			# message = 'Hello '+user.name+' , Your test results are in. You have scored '+result.score+' out of '+(result.quiz.question_count*result.quiz.marks)+' You can access your report through this link here' +result.report_url
-			# email_from = settings.EMAIL_HOST_USER 
-			# recipient_list = [user.email] 
-			# send_mail( subject, message, email_from, recipient_list ) 
+			subject = 'Quiz result' 
+			message = 'Hello '+user.name+' , Your test results are in. You have scored '+result.score+' out of '+(result.quiz.question_count*result.quiz.marks)+' You can access your report through this link here' +result.report_url
+			email_from = settings.EMAIL_HOST_USER 
+			recipient_list = [user.email] 
+			send_mail( subject, message, email_from, recipient_list ) 
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
@@ -197,13 +197,13 @@ class AdminQuizStatspdf(views.APIView):
 		try:
 			user=User.objects.get(id=request.data.get("userid"))
 			pdf=request.FILES['stats']
-			# subject = 'Quiz stats' 
-			# message = 'Hello '+user.name+' .You can find the summary of your performance in this attachment'
-			# email_from = settings.EMAIL_HOST_USER 
-			# recipient_list = [user.email] 
-			# mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-            # mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
-            # mail.send()
+			subject = 'Quiz stats' 
+			message = 'Hello '+user.name+' .You can find the summary of your performance in this attachment'
+			email_from = settings.EMAIL_HOST_USER 
+			recipient_list = [user.email] 
+			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+            mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
+            mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
