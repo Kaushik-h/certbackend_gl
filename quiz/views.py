@@ -128,7 +128,7 @@ class QuizTakerpdf(views.APIView):
 			subject = 'Quiz result' 
 			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this attached file'
 			email_from = settings.EMAIL_HOST_USER 
-			recipient_list = ["krizzkishore@gmail.com"] 
+			recipient_list = ["kaushikhareesh@gmail.com"] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
 			mail.attach(pdf.name, pdf.read(), pdf.content_type)
 			mail.send()
