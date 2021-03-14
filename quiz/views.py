@@ -122,7 +122,6 @@ class QuizTakerpdf(views.APIView):
 			user=request.user
 			quiztaker=QuizTaker.objects.get(id=request.data.get("quiztakerid"))
 			pdf=request.FILES['report']
-			# quiz_date=str(datetime.now()).replace(" ","")
 			pdf_name=user.email+str(quiztaker.id)+'.pdf'
 			a=Upload.upload_pdf(pdf, pdf_name)
 			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
@@ -136,7 +135,7 @@ class QuizTakerpdf(views.APIView):
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
 			attach=open('/home/kaushikhareesh/django/certbackend/filename.pdf','rb')
-			mail.attach('filename.pdf', attach.read(), 'application/pdf')
+			mail.attach('report.pdf', attach.read(), 'application/pdf')
 			mail.send()
 			os.remove('/home/kaushikhareesh/django/certbackend/filename.pdf')
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
@@ -206,13 +205,18 @@ class AdminQuizStatspdf(views.APIView):
 		try:
 			user=User.objects.get(id=request.data.get("userid"))
 			pdf=request.FILES['stats']
+			with open(BASE_DIR/'stats.pdf', 'wb+') as f:
+				for chunk in pdf.chunks():
+					f.write(chunk)
 			subject = 'Quiz stats' 
 			message = 'Hello '+user.name+' .You can find the summary of your performance in this attachment'
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-			mail.attach(pdf.name, pdf.read(), pdf.content_type)
+			attach=open('/home/kaushikhareesh/django/certbackend/stats.pdf','rb')
+			mail.attach('stats.pdf', attach.read(), 'application/pdf')
 			mail.send()
+			os.remove('/home/kaushikhareesh/django/certbackend/stats.pdf')
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
