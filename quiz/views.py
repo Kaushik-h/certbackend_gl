@@ -130,7 +130,7 @@ class QuizTakerpdf(views.APIView):
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-			mail.attach("Quiz result pdf", pdf.read(), pdf.content_type)
+			mail.attach(pdf.name, pdf.read(), pdf.content_type)
 			mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
@@ -204,7 +204,7 @@ class AdminQuizStatspdf(views.APIView):
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-			mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
+			mail.attach(pdf.name, pdf.read(), pdf.content_type)
 			mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
