@@ -126,7 +126,7 @@ class QuizTakerpdf(views.APIView):
 			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			quiztaker.save(force_update=True)
 			subject = 'Quiz result' 
-			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this link here' +quiztaker.report_url
+			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this attached file'
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
