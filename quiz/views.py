@@ -51,7 +51,7 @@ class GetQuizView(views.APIView):
 		try:
 			filters = {
  				key: value
-    			for key, value in request.data.items()
+				for key, value in request.data.items()
 			}
 			queryset=Quiz.objects.filter(**filters)
 			serializer=QuizSerializer(queryset,many=True)
@@ -80,7 +80,7 @@ class QuizTakerView(views.APIView):
 			user=request.user
 			# filters = {
  			# 	key: value
-    		# 	for key, value in request.data.items()
+			# 	for key, value in request.data.items()
 			# }
 			queryset=QuizTaker.objects.filter(user=user)
 			serializer=GetQuizTakerSerializer(queryset,many=True)
@@ -182,7 +182,7 @@ class AdminQuizStats(views.APIView):
 		try:
 			filters = {
  				key: value
-    			for key, value in request.data.items()
+				for key, value in request.data.items()
 			}
 			queryset=QuizTaker.objects.filter(**filters)
 			serializer=GetQuizTakerSerializer(queryset,many=True)
@@ -202,8 +202,8 @@ class AdminQuizStatspdf(views.APIView):
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-            mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
-            mail.send()
+			mail.attach("Credify-quiz-summary", pdf.read(), pdf.content_type)
+			mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
