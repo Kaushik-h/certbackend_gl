@@ -5,7 +5,9 @@ from django.db.models import Sum
 from datetime import datetime
 from .upload_report import Upload
 from django.conf import settings 
-from django.core.mail import send_mail, EmailMessage	
+from django.core.mail import send_mail, EmailMessage
+from certbackend.settings import BASE_DIR	
+import os
 
 class AddQuizView(generics.CreateAPIView):
 	# permission_classes = [permissions.IsAdminUser,]
@@ -116,7 +118,7 @@ class QuizTakerpdf(views.APIView):
 	permission_classes = [permissions.IsAuthenticated,]
 	http_method_names=['post']
 	def post(self, request, *args, **kwargs): 
-		try:
+		# try:
 			user=request.user
 			quiztaker=QuizTaker.objects.get(id=request.data.get("quiztakerid"))
 			pdf=request.FILES['report']
@@ -125,16 +127,21 @@ class QuizTakerpdf(views.APIView):
 			a=Upload.upload_pdf(pdf, pdf_name)
 			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			quiztaker.save(force_update=True)
+			with open(BASE_DIR/'filename.pdf', 'wb+') as f:
+				for chunk in pdf.chunks():
+					f.write(chunk)
 			subject = 'Quiz result' 
 			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this attached file'
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = ["kaushikhareesh@gmail.com"] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-			mail.attach("Report.pdf", pdf.read(), "application/pdf")
+			attach=open('/home/kaushikhareesh/django/certbackend/filename.pdf','rb')
+			mail.attach('filename.pdf', attach.read(), 'application/pdf')
 			mail.send()
+			os.remove('/home/kaushikhareesh/django/certbackend/filename.pdf')
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
-		except Exception as e:
-			return response.Response(str(e))
+		# except Exception as e:
+		# 	return response.Response(str(e))
 
 class Rankings(views.APIView):
 	http_method_names=['get']
