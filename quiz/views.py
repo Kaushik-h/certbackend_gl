@@ -130,7 +130,7 @@ class QuizTakerpdf(views.APIView):
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = ["kaushikhareesh@gmail.com"] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-			mail.attach(pdf.name, pdf.read(), pdf.content_type)
+			mail.attach("Report.pdf", pdf.read(), "application/pdf")
 			mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
