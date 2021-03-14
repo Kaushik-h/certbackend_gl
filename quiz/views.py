@@ -122,8 +122,8 @@ class QuizTakerpdf(views.APIView):
 			user=request.user
 			quiztaker=QuizTaker.objects.get(id=request.data.get("quiztakerid"))
 			pdf=request.FILES['report']
-			quiz_date=str(datetime.now()).replace(" ","")
-			pdf_name=user.email+quiz_date+'.pdf'
+			# quiz_date=str(datetime.now()).replace(" ","")
+			pdf_name=user.email+str(quiztaker.id)+'.pdf'
 			a=Upload.upload_pdf(pdf, pdf_name)
 			quiztaker.report_url='https://storage.googleapis.com/certificate_pdf/quiz/'+pdf_name
 			quiztaker.save(force_update=True)
@@ -133,7 +133,7 @@ class QuizTakerpdf(views.APIView):
 			subject = 'Quiz result' 
 			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this attached file'
 			email_from = settings.EMAIL_HOST_USER 
-			recipient_list = ["kaushikhareesh@gmail.com"] 
+			recipient_list = [user.email] 
 			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
 			attach=open('/home/kaushikhareesh/django/certbackend/filename.pdf','rb')
 			mail.attach('filename.pdf', attach.read(), 'application/pdf')

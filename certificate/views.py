@@ -102,7 +102,7 @@ class AdminSendMailView(views.APIView):
 			for cert in certs:
 				exp = cert.expiry_date-date.today()
 				subject = 'Crefidy admin' 
-				message = 'Hello '+cert.user.name+' , Your '+cert.csp+' '+cert.certname+' certification is expiring '+str(exp.days)+' days'
+				message = 'Hello '+cert.user.name+' , Your '+cert.csp+' '+cert.certname+' certification is expiring '+str(exp.days+1)+' days'
 				email_from = settings.EMAIL_HOST_USER 
 				recipient_list = [cert.user.email] 
 				print(cert,message,recipient_list)
