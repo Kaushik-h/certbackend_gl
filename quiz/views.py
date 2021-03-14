@@ -129,7 +129,9 @@ class QuizTakerpdf(views.APIView):
 			message = 'Hello '+user.name+' , Your test results are in. You have scored '+str(quiztaker.score)+' out of '+str((quiztaker.quiz.question_count*quiztaker.quiz.marks))+' You can access your report through this link here' +quiztaker.report_url
 			email_from = settings.EMAIL_HOST_USER 
 			recipient_list = [user.email] 
-			send_mail( subject, message, email_from, recipient_list ) 
+			mail = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+			mail.attach("Quiz result pdf", pdf.read(), pdf.content_type)
+			mail.send()
 			return response.Response("File uploaded",status=status.HTTP_200_OK)
 		except Exception as e:
 			return response.Response(str(e))
