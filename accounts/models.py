@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
 
 	def validate_email(value):
-		if not value.endswith('virtusa.com'):
+		if not value.endswith('.com'):
 			raise ValidationError("Enter your org mail")
 	email = models.EmailField(unique=True, null=False, blank=False, validators=[validate_email])
 	name = models.CharField(max_length=40,null=False,blank=False)
