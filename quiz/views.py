@@ -55,7 +55,7 @@ class GetQuizView(views.APIView):
  				key: value
 				for key, value in request.data.items()
 			}
-			queryset=Quiz.objects.filter(**filters)
+			queryset=Quiz.objects.filter(**filters).order_by('-id')
 			serializer=QuizSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)
 		except Exception as e:
