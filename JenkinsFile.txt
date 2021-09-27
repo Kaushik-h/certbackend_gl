@@ -1,0 +1,53 @@
+pipeline {
+  agent any
+  environment{
+        dockerImage = ''
+        registry = 'kaushikhareesh/credifydjango'
+        registryCredential = 'docker_cred'
+    }
+  stages {
+    stage('SCM') {
+      steps {
+        git branch: 'main', url: 'https://github.com/Kaushik-h/certbackend.git'
+        sh 'export WORKSPACE=`pwd`'
+        sh 'pip3 install -r requirements.txt'
+        sh 'python3 manage.py makemigrations'
+        sh 'python3 manage.py migrate'
+        sh 'python3 manage.py jenkins'
+      }
+    }
+    stage('Static Code Checking') {
+            steps {
+                script {
+                    sh 'find . -name \\*.py | xargs pylint --load-plugins=pylint_django -f parseable | tee pylint.log'
+                    sh 'pylint --load-plugins=pylint_django accounts/views.py accounts/models.py certificate/views.py certificate/serializers.py quiz/serializers.py quiz/urls.py quiz/views.py | tee pylint.log'
+                    recordIssues(
+                        tool: pyLint(pattern: 'pylint.log'),
+                        failTotalHigh: 10,
+                    )
+                }
+            }
+        }
+    stage('Building image') {
+            steps{
+                script {
+                  dockerImage = docker.build registry
+                }
+            }
+        }
+    stage('Upload Docker Image'){
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()    
+                    }
+                }
+            }
+        }
+  }
+  post {
+      always {
+        junit 'reports/junit.xml'
+      }
+   } 
+}
