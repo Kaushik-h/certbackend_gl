@@ -13,5 +13,5 @@ urlpatterns = [
     path('feedback', FeedbackView.as_view()),
     path('sendfeedback', SendFeedback.as_view()),
     path('adminquizstats', AdminQuizStats.as_view()),
-    path('adminquizstatspdf', AdminQuizStatspdf.as_view()),
+    # path('adminquizstatspdf', AdminQuizStatspdf.as_view()),
 ]

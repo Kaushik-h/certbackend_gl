@@ -30,32 +30,42 @@ SECRET_KEY = 'y_kq_ytulo3nm+-3*%h0@hy2e49c*p$pm*nyg^x0o@8t&6trbl'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.credify.tk','credify.tk','34.107.221.144','127.0.0.1','35.244.227.149',]
+ALLOWED_HOSTS = ['www.credify.tk','credify.tk','34.107.221.144','127.0.0.1','35.244.227.149','0.0.0.0','35.232.17.192','34.82.144.123']
 
 AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'accounts',
-    'certificate',
-    'quiz',
-    'knox',
-    'corsheaders'
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'rest_framework',
+	'accounts',
+	'certificate',
+	'quiz',
+	'knox',
+	'corsheaders',
+	'django_jenkins'
 ]
 
+PROJECT_APPS = ['accounts','quiz','certificate']
+
+
+JENKINS_TASKS = (
+	# 'django_jenkins.tasks.with_coverage',
+ 	# 'django_jenkins.tasks.run_pep8',
+    # 'django_jenkins.tasks.run_pyflakes',
+)
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ( 
-        'knox.auth.TokenAuthentication',
-    ),
-    'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
+	'DEFAULT_AUTHENTICATION_CLASSES': ( 
+		'knox.auth.TokenAuthentication',
+	),
+	'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
 
 REST_KNOX = {
@@ -63,14 +73,14 @@ REST_KNOX = {
   }
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL=True
@@ -78,19 +88,19 @@ CORS_ORIGIN_ALLOW_ALL=True
 ROOT_URLCONF = 'certbackend.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/ 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [BASE_DIR/ 'templates'],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'certbackend.wsgi.application'
@@ -99,10 +109,21 @@ WSGI_APPLICATION = 'certbackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.sqlite3',
+# 		'NAME': BASE_DIR / 'db.sqlite3',
+# 	}
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'credify',
+        'USER': 'credifyadmin',
+        'PASSWORD': 'credifyadmin',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -111,18 +132,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -148,13 +169,13 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
-     os.path.join(BASE_DIR, 'build/static'),
-     os.path.join(BASE_DIR, 'build')
+	 os.path.join(BASE_DIR, 'build/static'),
+	 os.path.join(BASE_DIR, 'build')
 )
 
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.path.join(BASE_DIR, 'arulmozhi-project-b7c5242a1b10.json')
+	os.path.join(BASE_DIR, 'arulmozhi-project-b7c5242a1b10.json')
 )
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 GS_BUCKET_NAME = 'certificate_pdf'

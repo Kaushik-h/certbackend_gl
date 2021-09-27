@@ -22,5 +22,5 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('', include('certificate.urls')),
     path('', include('quiz.urls')),
-    re_path(r'.*',TemplateView.as_view(template_name="index.html")),
+    # re_path(r'.*',TemplateView.as_view(template_name="index.html")),
 ]

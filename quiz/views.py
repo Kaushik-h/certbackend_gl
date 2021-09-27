@@ -80,10 +80,6 @@ class QuizTakerView(views.APIView):
 	def get(self, request, *args, **kwargs): 
 		try:
 			user=request.user
-			# filters = {
- 			# 	key: value
-			# 	for key, value in request.data.items()
-			# }
 			queryset=QuizTaker.objects.filter(user=user)
 			serializer=GetQuizTakerSerializer(queryset,many=True)
 			return response.Response(serializer.data,status=status.HTTP_200_OK)

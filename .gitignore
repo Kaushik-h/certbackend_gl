@@ -9,4 +9,5 @@
 logs/
 run/
 serverrestart.sh
-*.json
+migrations/
+# *.json
